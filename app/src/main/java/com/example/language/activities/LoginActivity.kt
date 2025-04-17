@@ -19,7 +19,7 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     // Uncomment if you're using dependency injection
-    // @Inject
+     @Inject
      lateinit var apiService: ApiService
 
     override fun onCreate(savedInstanceState: Bundle?) {

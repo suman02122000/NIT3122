@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    // Add Kotlin Serialization plugin if using JSON serialization
-    // alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.kapt)          // ✅ Required for Hilt to work
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -55,4 +55,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+
+
 }
