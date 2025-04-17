@@ -1,23 +1,26 @@
 package com.example.language.activities
+
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.language.R
 import com.example.language.adapter.MyAdapter
-import com.example.language.api.ApiClient
 import com.example.language.api.ApiService
 import com.example.language.models.DashboardResponse
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
 
+    @Inject
     lateinit var apiService: ApiService
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyAdapter
 
@@ -25,16 +28,10 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-
-        // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false) // ✅ Vertical scroll
 
-//        // Initialize Retrofit
-        val retrofit = ApiClient.getRetrofitInstance()
-        apiService = retrofit.create(ApiService::class.java)
-
-        // Get API data
+        // API call using injected apiService
         apiService.getEntities().enqueue(object : Callback<DashboardResponse> {
             override fun onResponse(call: Call<DashboardResponse>, response: Response<DashboardResponse>) {
                 if (response.isSuccessful) {
@@ -47,16 +44,13 @@ class DashboardActivity : AppCompatActivity() {
                         recyclerView.adapter = adapter
                     }
                 } else {
-                    // Handle response error
                     Log.e("DashboardActivity", "API response error: ${response.code()} ${response.message()}")
                 }
             }
 
             override fun onFailure(call: Call<DashboardResponse>, t: Throwable) {
-                // Handle network failure
                 Log.e("DashboardActivity", "Network error: ${t.message}", t)
             }
         })
     }
 }
-
